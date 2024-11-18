@@ -78,4 +78,59 @@ func FuncUtil() {
     }
 }
 
+// strip takes a string output and removes any blank lines
+// It does this by first splitting the string into individual lines
+// Then it iterates over each line, checking if the line is empty
+// or contains only whitespace characters. If the line is empty
+// or contains only whitespace characters, it is skipped. All
+// non-empty lines are then joined back together with newline
+// characters in between to form the final output.
+func strip(output string) string {
+	// Split the string into individual lines
+	lines := strings.Split(output, "\n")
+	
+	// Create a new slice to hold the non-empty lines
+	var nonEmptyLines []string
+	
+	// Iterate over each line
+	for _, line := range lines {
+		// Trim the line of any leading or trailing whitespace
+		trimmedLine := strings.TrimSpace(line)
+		
+		// Check if the line is empty or contains only whitespace
+		if trimmedLine != "" {
+			// If the line is not empty, add it to the new slice
+			nonEmptyLines = append(nonEmptyLines, line)
+		}
+	}
+	
+	// Join all the non-empty lines back together with newline
+	// characters in between
+	return strings.Join(nonEmptyLines, "\n")
+}
 
+// execShell runs a command with the given arguments and prints the output
+// to the console, stripping out any blank lines in the output.
+// If there is an error running the command, it is printed to the console.
+func execShell(command string, args ...string) {
+	// Create a new exec.Cmd object with the given command and arguments
+	cmd := exec.Command(command, args...)
+	
+	// Run the command and capture its output, both stdout and stderr
+	output, err := cmd.CombinedOutput()
+	
+	// Convert the output from a byte slice to a string
+	outputStr := string(output)
+	
+	// Strip out any blank lines from the output
+	strippedOutput := strip(outputStr)
+	
+	// Print the stripped output to the console
+	fmt.Println(strippedOutput)
+	
+	// Check if there was an error running the command
+	if err != nil {
+		// If there was an error, print it to the console
+		fmt.Println("Error:", err)
+	}
+}
