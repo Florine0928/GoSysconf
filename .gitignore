@@ -1,5 +1,17 @@
 persist/*
 persist/
-sysconf
+gopherconf
 go.sum
+*.exe
+*.out
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+*.bin
+*.deb
+*.rpm
+*.go.build
+*.go.*.build
 

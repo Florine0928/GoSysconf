@@ -1,4 +1,4 @@
-module gosys
+module gopherconf
 
 go 1.18
 
