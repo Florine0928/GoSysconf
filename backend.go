@@ -78,59 +78,58 @@ func FuncUtil() {
     }
 }
 
-// strip takes a string output and removes any blank lines
-// It does this by first splitting the string into individual lines
-// Then it iterates over each line, checking if the line is empty
-// or contains only whitespace characters. If the line is empty
-// or contains only whitespace characters, it is skipped. All
-// non-empty lines are then joined back together with newline
-// characters in between to form the final output.
+// This function takes a string of text as input and returns a new string with any blank or empty lines removed.
+// The purpose of this function is to remove any unnecessary whitespace from command output when printing to the console.
 func strip(output string) string {
-	// Split the string into individual lines
+	// Split the input string into an array of strings, one for each line of text
 	lines := strings.Split(output, "\n")
-	
-	// Create a new slice to hold the non-empty lines
+
+	// Initialize an empty array of strings that will store the non-empty lines
 	var nonEmptyLines []string
-	
-	// Iterate over each line
+
+	// Iterate over the array of lines
 	for _, line := range lines {
-		// Trim the line of any leading or trailing whitespace
-		trimmedLine := strings.TrimSpace(line)
-		
-		// Check if the line is empty or contains only whitespace
-		if trimmedLine != "" {
-			// If the line is not empty, add it to the new slice
+		// Check if the line is not empty or blank
+		if strings.TrimSpace(line) != "" {
+			// If the line is non-empty, add it to the array of non-empty lines
 			nonEmptyLines = append(nonEmptyLines, line)
 		}
 	}
-	
-	// Join all the non-empty lines back together with newline
-	// characters in between
+
+	// Join the non-empty lines back together with a newline character in between each line
 	return strings.Join(nonEmptyLines, "\n")
 }
 
-// execShell runs a command with the given arguments and prints the output
-// to the console, stripping out any blank lines in the output.
-// If there is an error running the command, it is printed to the console.
-func execShell(command string, args ...string) {
-	// Create a new exec.Cmd object with the given command and arguments
+// This function runs a shell command with the given arguments and handles any errors.
+// It takes 3 parameters:
+// 1. command: the command to run
+// 2. suppressOutput: a boolean indicating whether to suppress the output of the command
+// 3. args: a variable number of arguments to pass to the command
+func execShell(command string, suppressOutput bool, args ...string) {
+	// Create a new command to run
 	cmd := exec.Command(command, args...)
-	
-	// Run the command and capture its output, both stdout and stderr
+
+	// Run the command and capture its output and any errors
 	output, err := cmd.CombinedOutput()
-	
-	// Convert the output from a byte slice to a string
-	outputStr := string(output)
-	
-	// Strip out any blank lines from the output
-	strippedOutput := strip(outputStr)
-	
-	// Print the stripped output to the console
-	fmt.Println(strippedOutput)
-	
-	// Check if there was an error running the command
+
+	// Check if there was an error
 	if err != nil {
-		// If there was an error, print it to the console
+		// If suppressOutput is false, print the command output even if there was an error
+		if !suppressOutput {
+			// Print the command output and any error message
+			fmt.Println("Command output:", strip(string(output)))
+		}
+
+		// Print the error message
 		fmt.Println("Error:", err)
+
+		// Return to prevent further execution of the function
+		return
+	}
+
+	// If there was no error and suppressOutput is false, print the command output
+	if !suppressOutput {
+		// Print the command output, stripped of any blank or empty lines
+		fmt.Println(strip(string(output)))
 	}
 }
