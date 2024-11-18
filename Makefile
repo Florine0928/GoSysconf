@@ -9,3 +9,5 @@ clean:
 	rm -rf $(bin)
 	$(GO) $(CFLAGS) main.go -o $(bin)
 
+run:
+	go run .
