@@ -1,4 +1,4 @@
-GO = gccgo
+GO = gccgo 
 CFLAGS = -O3 -flto -march=native -funroll-loops -ftree-vectorize -fno-exceptions
 CFLAGS_EXT = -fomit-frame-pointer -fno-stack-protector -g0
 bin = ./gopherconf
@@ -12,6 +12,3 @@ build:
 clean:
 	rm -rf $(bin)
 	$(GO) $(CFLAGS) $(CFLAGS_EXT) main.go backend.go -o $(bin)
-
-run:
-	go run .

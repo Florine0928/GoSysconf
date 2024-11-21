@@ -2,4 +2,6 @@ module gopherconf
 
 go 1.18
 
-require github.com/furiousman59/execShell v0.0.0-20241118211848-127718c2a5f5 // indirect
+require (
+	github.com/furiousman59/GO59 v0.0.0-20241120175923-3ff72dfe4190 // indirect
+	)

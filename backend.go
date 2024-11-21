@@ -3,9 +3,7 @@ package main
 import (
     "fmt"
     "os"
-    "os/exec"
-    "path/filepath"
-    "log"
+    es "github.com/furiousman59/GO59" // es.ExecShell es.StringRNG es.FileExists es.Join es.Read
 )
 
 func Usage() {
@@ -19,9 +17,36 @@ func Usage() {
 	fmt.Println("	-echo					Echoes a environment variable")
 }
 
-var cache string 
-var wallpaper string                                    
-var cachedwallpaper string  
+func CacheDir() {
+    if es.FileExists(cache) == false {
+        // Attempt to create the cache directory
+        err := os.MkdirAll(cache, 0755)
+        // Check if there was an error in creating the directory
+        if err != nil {
+        // Print the error message to the console
+        fmt.Println("Error creating cache directory:", err)
+        // Exit the program with a non-zero status to indicate failure
+        os.Exit(1)
+    }
+    if !es.FileExists(cachewp) {
+        file, err := os.Create(cachewp)
+        if err != nil {
+            fmt.Println("Error creating cache file:", err)
+            return
+        }
+        defer file.Close() // Ensure the file is closed when done
+        fmt.Println("Cache file created successfully")
+    } else {
+        fmt.Println("Cache file already exists")
+    }
+}
+    }
+
+
+
+var cache string // ~/.cache/gopherconf
+var wallpaper string                 
+var cachewp string  // cached wallpaper
 var SESSION = os.Getenv("XDG_SESSION_TYPE")
 var util string
 
@@ -36,29 +61,27 @@ func init() {
         os.Exit(1)
     }
     // Construct the cache path by joining the home directory
-    // with ".cache" and "GoSys" to create a specific cache directory
-    cache = filepath.Join(home, ".cache", "GoSys")
+    // with ".cache" and "gopherconf" to create a specific cache directory
+    cache = es.Join(home, ".cache", "gopherconf")
+
+    // Construct the cached wallpaper path
+    cachewp = cache + "/" + "CACHED_WALLPAPER"
+
+    // Check if the cache directory exists, if not, create it
+    CacheDir()
 }
 
 // This function is used to set the wallpaper based on the session type
 // It should be called after the wallpaper path has been set
 func FuncUtil() {
-    // Check if the session type is Wayland
     if SESSION == "wayland" {
         util = "swaybg"
         
         // Create a command to run swaybg with the following arguments:
         // * -i specifies the input image
-        // * wallpaper is the path to the wallpaper image
+        // * wallpaper is the path to the wallpaper image, it being a string variable fetched from flag "-w" 
         // * > /dev/null 2>&1 & runs the command in the background and redirects stdout and stderr to /dev/null
-        utilCmd := exec.Command("nohup", "sh", "-c", util+" -i "+wallpaper+" > /dev/null 2>&1 &")
-        
-        // Run the command and check for errors
-        err := utilCmd.Run() 
-        if err != nil {
-            log.Fatal(err) 
-        }
-    // If the session type is X11
+        es.ExecShell("nohup", true, "sh", "-c", util+" -i "+wallpaper+" > /dev/null 2>&1 &")
     } else if SESSION == "x11" {
         util = "feh"
         
@@ -66,13 +89,7 @@ func FuncUtil() {
         // * --bg-scale specifies the image is to be scaled to the desktop size
         // * wallpaper is the path to the wallpaper image
         // * > /dev/null 2>&1 & runs the command in the background and redirects stdout and stderr to /dev/null
-        utilCmd := exec.Command("nohup", "sh", "-c", util+" --bg-scale "+wallpaper+" > /dev/null 2>&1 &")
-        
-        // Run the command and check for errors
-        err := utilCmd.Run()  
-        if err != nil {
-            log.Fatal(err)  
-        }
+        es.ExecShell("nohup", true, "sh", "-c", util+" --bg-scale "+wallpaper+" > /dev/null 2>&1 &")
     } else {
         fmt.Println("Unknown session type:", SESSION)
     }
