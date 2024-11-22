@@ -24,7 +24,7 @@ Go Dependencies: GO59
 ```
 
 ```bash
-go get github.com/furiousman59/gopherconf@Latest
+go get github.com/furiousman59/GO59@Latest
 git clone github.com/furiousman59/gopherconf && cd gopherconf && make build && sudo make install
 ```
 
