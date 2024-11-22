@@ -19,21 +19,18 @@ Probally a backend utility you hook up to your window manager's keybind daemon
 
 
 ## Installation
-
+```bash
+Dependencies: golang make
+```
 
 ```bash
-git clone github.com/furiousman59/gopherconf
+git clone github.com/furiousman59/gopherconf && cd gopherconf && make build && sudo make install
 ```
-``` bash
-cd gopherconf 
-```
-```bash
-make build
-```
+
 ## Usage
 
 ```bash
-./gopherconf -h
+gopherconf -h
 ```
 
 ### Thanks readme.so for this readme!!
