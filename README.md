@@ -8,11 +8,10 @@
 A CLI system management utility for Unix-like systems written in glorious language of the Gopher
 
 ## What this does?
-- Set a wallpaper, optionally cache it
-- Start/Kill/Reload a bar
-- Refresh Pywal cache on each wallpaper set
-- Seamless change between dark and light mode
-- Check the wiki for more info
+- Set wallpaper (Swaybg and Feh for Wayland and X11)
+- Start, Kill, Reload Waybar and AGS Bar on the fly
+- Optional Pywal integration, and linker to Waybar (Check wiki.md for more details)
+- Gopher
 
 ## Use case?
 Probally a backend utility you hook up to your window manager's keybind daemon
@@ -21,16 +20,18 @@ Probally a backend utility you hook up to your window manager's keybind daemon
 ## Installation
 ```bash
 Dependencies: golang make
+Go Dependencies: GO59
 ```
 
 ```bash
+go get github.com/furiousman59/gopherconf@Latest
 git clone github.com/furiousman59/gopherconf && cd gopherconf && make build && sudo make install
 ```
 
 ## Usage
 
 ```bash
-gopherconf -h
+gopherconf -help
 ```
 
 ### Thanks readme.so for this readme!!

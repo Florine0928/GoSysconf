@@ -7,15 +7,36 @@ import (
 	"os"
 )
 
-func Usage() {
-	fmt.Println("Usage:", os.Args[0], "[OPTIONS]")
-	fmt.Println("	Options:")
-	fmt.Println("	-help, -h (Option)			Shows this help message unless a option is specified")
-	fmt.Println("	-wallpaper, -w <path>			Wallpaper Path")
-	fmt.Println("	-bar, -b <etc>				Which Bar you use")
-	fmt.Println("	-scheme, -m <dark/light>		Colorscheme")
-	fmt.Println("	-reload, -r				Refreshes Components such as bar")
-	fmt.Println("	-disable, -d				Disable a component")
+// Bash Freestyle
+// var echo = fmt.Println
+// echo("GNU Bash 4.4.19(1)-release (x86_64-pc-linux-gnu)")
+
+func Usage(which string) {
+	if which == "general" {
+		fmt.Println("Usage:", os.Args[0], "[OPTIONS]")
+		fmt.Println("	Options:")
+		fmt.Println("	-help, -h (Option)			Shows this help message unless a option is specified")
+		fmt.Println("	-wallpaper, -w <path>			Wallpaper Path")
+		fmt.Println("	-bar, -b 				Which Bar you use <waybar, polybar, ags>")
+		fmt.Println("	-scheme, -m                             Colorscheme, pyd/pyl for pywal dark/light")
+		fmt.Println("	-reload, -r				Refreshes Components such as bar")
+		fmt.Println("	-disable, -d				Disable a component")
+	} else if which == "wallpaper" {
+		fmt.Println("Usage: ", os.Args[0], "-wallpaper, -w path/to/wallpaper.anyformat")
+	} else if which == "bar" {
+		fmt.Println("Usage: ", os.Args[0], "-bar, -b <waybar/polybar/ags>")
+	} else if which == "scheme" {
+		fmt.Println("Usage: ", os.Args[0], "-scheme, -m <manual/pyd/pyl>")
+		fmt.Println("	Pywal must be installed: https://github.com/dylanaraps/pywal")
+		fmt.Println("	Pyd and pyl are shortcuts for dark and light respectively")
+	} else if which == "reload" {
+		fmt.Println("Usage: ", os.Args[0], "-reload, -r <all/util/bar>")
+		fmt.Println("	Can only reload enabled components")
+	} else if which == "disable" {
+		fmt.Println("Usage: ", os.Args[0], "-disable, -d <all/util/bar>")
+	} else {
+		fmt.Println("Usage:", os.Args[0], "[OPTIONS]")
+	}
 }
 
 func CacheDir() {
@@ -39,44 +60,115 @@ func CacheDir() {
 	}
 }
 
+var home string
 var cache string   // ~/.cache/gopherconf
 var cachewp string // cached wallpaper
 var SESSION = os.Getenv("XDG_SESSION_TYPE")
 var util string
 
-func init() {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		fmt.Println("Error fetching home directory:", err)
-		os.Exit(1)
-	}
-	cache = es.Join(home, ".cache", "gopherconf")
-	cachewp = cache + "/" + "CACHED_WALLPAPER"
-	CacheDir()
-
-	if SESSION == "wayland" {
-		util = "swaybg"
-	} else if SESSION == "x11" {
-		util = "feh"
-	}
-
-}
-
 func FuncUtil() {
 	if SESSION == "wayland" {
-		KillBar()
+		KillUtil("util")
 		es.ExecShell("nohup", true, "sh", "-c", util+" -i "+config.Wallpaper+" > /dev/null 2>&1 &")
 	} else if SESSION == "x11" {
-		KillBar()
+		KillUtil("util")
 		es.ExecShell("nohup", true, "sh", "-c", util+" --bg-scale "+config.Wallpaper+" > /dev/null 2>&1 &")
 	} else {
 		fmt.Println("Unknown session type:", SESSION)
 	}
 }
 
-func KillBar() {
-	es.ExecShell("pkill", true, util)
+func FuncBar() {
+	if config.Bar == "disabled" || config.Bar == "" {
+		fmt.Println("Error: No bar specified in configuration")
+		return
+	}
+
+	if SESSION == "wayland" {
+		if config.Bar == "waybar" {
+			es.ExecShell("nohup", true, "sh", "-c", "waybar > /dev/null 2>&1 &")
+		} else if config.Bar == "ags" {
+			es.ExecShell("nohup", true, "sh", "-c", "ags > /dev/null 2>&1 &")
+		} else {
+			fmt.Println("Error: Unknown bar:", config.Bar)
+			return
+		}
+	} else if SESSION == "x11" {
+		if config.Bar == "polybar" {
+			es.ExecShell("nohup", true, "sh", "-c", "polybar mybar > /dev/null 2>&1 &")
+		} else {
+			fmt.Println("Error: Unknown bar:", config.Bar)
+			return
+		}
+	} else {
+		fmt.Println("Error: Unknown session type:", SESSION)
+		return
+	}
 }
+func KillUtil(which string) {
+	if which == "all" {
+		es.ExecShell("pkill", true, util)
+		es.ExecShell("pkill", true, config.Bar)
+	} else if which == "util" {
+		es.ExecShell("pkill", true, util)
+	} else if which == "bar" {
+		es.ExecShell("pkill", true, config.Bar)
+	}
+}
+
+func Reload(which string) {
+	if which == "all" {
+		KillUtil("all")
+		FuncUtil()
+		FuncBar()
+	} else if which == "util" {
+		KillUtil("util")
+		FuncUtil()
+	} else if which == "bar" {
+		KillUtil("bar")
+		FuncBar()
+	}
+}
+
+func InitPywal() {
+	if config.Scheme == "manual" {
+		return
+	}
+
+	if config.Wallpaper == "" {
+		fmt.Println("Error: No wallpaper specified in configuration")
+		return
+	}
+
+	var command string
+	switch config.Scheme {
+	case "pyd":
+		command = "wal -i " + config.Wallpaper
+	case "pyl":
+		command = "wal -l -i " + config.Wallpaper
+	default:
+		return
+	}
+
+	es.ExecShell("sh", true, "-c", command)
+}
+
+func Garbage(which string) {
+	if which == "pywal" {
+		es.ExecShell("rm", true, "-rf", es.Join(home, ".cache", "wal"))
+	}
+}
+
+func Linker() {
+	pywalPath := es.Join(home, ".cache", "wal", "colors-waybar.css")
+	if config.Bar == "waybar" {
+		waybarPath := es.Join(home, ".config", "waybar", "colors-waybar.css")
+		if err := os.Symlink(pywalPath, waybarPath); err != nil {
+			return
+		}
+	}
+} // more to be added i guess??? you can @import the css file in waybar style.css now and make use of pywal!!!!!!!!!!!!!!!!11!1!1
+// ps: i'm going insane
 
 func WriteConfig() {
 	configPath := es.Join(cache, "config.json")
