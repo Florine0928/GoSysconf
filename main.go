@@ -14,6 +14,11 @@ var config struct { // config
 	Bar       string `json:"bar"`       // self explanatory
 	Utile     string `json:"utile"`     // enabled or disabled - related to bar
 	Scheme    string `json:"scheme"`    // Colorscheme - semi-related to pywal
+	Looper    string `json:"looper"`    // enabled or disabled
+	LooperUtil    string `json:"looperUtil"`    // enabled or disabled - related to wallpaper setter
+	LooperUtilCycle string `json:"looperUtilCycle"`    // first or last
+	LooperUtile   string `json:"looperUtile"`    // enabled or disabled - related to bar
+	LooperUtileCycle string `json:"looperUtileCycle"`    // first or last
 }
 
 func main() {
@@ -41,6 +46,11 @@ func main() {
 			Bar       string `json:"bar"`
 			Utile     string `json:"utile"`
 			Scheme    string `json:"scheme"`
+			Looper    string `json:"looper"`
+			LooperUtil    string `json:"looperUtil"`
+			LooperUtilCycle string `json:"looperUtilCycle"`
+			LooperUtile   string `json:"looperUtile"`
+			LooperUtileCycle string `json:"looperUtileCycle"`
 		}{}
 	} else {
 		err = json.Unmarshal(b, &config)
@@ -69,6 +79,9 @@ func main() {
 				case "reload", "r":
 					Usage("reload")
 					i++
+				case "looper", "l":
+					Usage("looper")
+					i++
 				case "disable", "d":
 					Usage("disable")
 					i++
@@ -79,8 +92,7 @@ func main() {
 				Usage("general")
 			}
 		case "-eval", "-e":
-			Linker()
-			InitPywal()
+			Looper("all")
 			// used for testing functions generally, don't use this unless you know what you're doing
 		case "-scheme", "-m":
 			if i+1 < len(args) {
@@ -161,7 +173,6 @@ func main() {
 				return
 			}
 			i++
-
 		case "-disable", "-d":
 			if i+1 < len(args) {
 				if args[i+1] == "wallpaper" {
@@ -199,6 +210,43 @@ func main() {
 					fmt.Println("Error: Invalid component to disable:", args[i+1])
 					return
 				}
+			}
+		case "-loop", "-l":	
+			if i+1 < len(args) {
+				if args[i+1] == "wallpaper" {
+					config.LooperUtil = "enabled"
+					config.LooperUtilCycle = "first"
+					config.Looper = "enabled"
+					WriteConfig()
+					i++
+				} else if args[i+1] == "bar" {
+					config.LooperUtile = "enabled"
+					config.LooperUtileCycle = "first"
+					config.Looper = "enabled"
+					WriteConfig()
+					i++
+				} else if args[i+1] == "all" {
+					config.LooperUtil = "enabled"
+					config.LooperUtilCycle = "first"
+					config.LooperUtile = "enabled"
+					config.LooperUtileCycle = "first"
+					config.Looper = "enabled"
+					WriteConfig()
+					i++
+				}
+			}
+		case "exec":
+			if i+1 < len(args) {
+				if args[i+1] == "looper.wallpaper" {
+					Looper("util")
+				} else if args[i+1] == "looper.bar" {
+					Looper("bar")
+				} else if args[i+1] == "looper.all" {
+					Looper("all")
+				} else {
+					fmt.Println("Error: Invalid option:", args[i+1])
+				}
+				i++
 			}
 		case "-reload", "-r":
 			if i+1 < len(args) {

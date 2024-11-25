@@ -18,6 +18,7 @@ func Usage(which string) {
 		fmt.Println("	-help, -h (Option)			Shows this help message unless a option is specified")
 		fmt.Println("	-wallpaper, -w <path>			Wallpaper Path")
 		fmt.Println("	-bar, -b 				Which Bar you use <waybar, polybar, ags>")
+		fmt.Println("	-looper, -l				Cycle between enabling/disabling a component")
 		fmt.Println("	-scheme, -m                             Colorscheme, pyd/pyl for pywal dark/light")
 		fmt.Println("	-reload, -r				Refreshes Components such as bar")
 		fmt.Println("	-disable, -d				Disable a component")
@@ -34,6 +35,10 @@ func Usage(which string) {
 		fmt.Println("	Can only reload enabled components")
 	} else if which == "disable" {
 		fmt.Println("Usage: ", os.Args[0], "-disable, -d <all/util/bar>")
+	} else if which == "looper" {
+		fmt.Println("Usage: ", os.Args[0], "-looper, -l <all/util/bar>")
+		fmt.Println("	Can only enable/disable enabled components")
+		fmt.Println("	Available components: wallpaper, bar")
 	} else {
 		fmt.Println("Usage:", os.Args[0], "[OPTIONS]")
 	}
@@ -169,6 +174,36 @@ func Linker() {
 	}
 } // more to be added i guess??? you can @import the css file in waybar style.css now and make use of pywal!!!!!!!!!!!!!!!!11!1!1
 // ps: i'm going insane
+
+func Looper(which string) {
+	if which == "util" {
+		if config.LooperUtil == "enabled" && config.LooperUtilCycle == "first" {
+			Reload("util")
+			config.LooperUtilCycle = "last"
+			WriteConfig()
+		} else if config.LooperUtil == "enabled" && config.LooperUtilCycle == "last" {
+			KillUtil("util")
+			config.LooperUtilCycle = "first"
+			WriteConfig()
+		}
+	} else if which == "bar" {
+		// Ensures that the cycle is toggled between "first" and "last"
+		if config.LooperUtile == "enabled" && config.LooperUtileCycle == "first" {
+			Reload("bar")
+			config.LooperUtileCycle = "last"
+			WriteConfig()
+		} else if config.LooperUtile == "enabled" && config.LooperUtileCycle == "last" {
+			KillUtil("bar")
+			config.LooperUtileCycle = "first"
+			WriteConfig()
+		}
+	} else if which == "all" {
+		Looper("util")
+		Looper("bar")
+	} else if config.Looper == "disabled" {
+		return
+	}
+}
 
 func WriteConfig() {
 	configPath := es.Join(cache, "config.json")
