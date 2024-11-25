@@ -22,10 +22,13 @@ func Usage(which string) {
 		fmt.Println("	-scheme, -m                             Colorscheme, pyd/pyl for pywal dark/light")
 		fmt.Println("	-reload, -r				Refreshes Components such as bar")
 		fmt.Println("	-disable, -d				Disable a component")
+		fmt.Println("  exec								Execute a event")
 	} else if which == "wallpaper" {
 		fmt.Println("Usage: ", os.Args[0], "-wallpaper, -w path/to/wallpaper.anyformat")
+		fmt.Println("Swaybg or Feh must be installed")
 	} else if which == "bar" {
 		fmt.Println("Usage: ", os.Args[0], "-bar, -b <waybar/polybar/ags>")
+		fmt.Println("One of these must be installed")
 	} else if which == "scheme" {
 		fmt.Println("Usage: ", os.Args[0], "-scheme, -m <manual/pyd/pyl>")
 		fmt.Println("	Pywal must be installed: https://github.com/dylanaraps/pywal")
@@ -33,11 +36,14 @@ func Usage(which string) {
 	} else if which == "reload" {
 		fmt.Println("Usage: ", os.Args[0], "-reload, -r <all/util/bar>")
 		fmt.Println("	Can only reload enabled components")
+	} else if which == "exec" {
+		fmt.Println("Usage: ", os.Args[0], "exec <which>")
+		fmt.Println("Available events: looper.wallpaper, looper.bar, looper.bar")
 	} else if which == "disable" {
 		fmt.Println("Usage: ", os.Args[0], "-disable, -d <all/util/bar>")
 	} else if which == "looper" {
 		fmt.Println("Usage: ", os.Args[0], "-looper, -l <all/util/bar>")
-		fmt.Println("	Can only enable/disable enabled components")
+		fmt.Println("	Cycle between turning on/off a component")
 		fmt.Println("	Available components: wallpaper, bar")
 	} else {
 		fmt.Println("Usage:", os.Args[0], "[OPTIONS]")
@@ -93,7 +99,7 @@ func FuncBar() {
 		if config.Bar == "waybar" {
 			es.ExecShell("nohup", true, "sh", "-c", "waybar > /dev/null 2>&1 &")
 		} else if config.Bar == "ags" {
-			es.ExecShell("nohup", true, "sh", "-c", "ags > /dev/null 2>&1 &")
+			es.ExecShell("nohup", true, "sh", "-c", "ags run > /dev/null 2>&1 &")
 		} else {
 			fmt.Println("Error: Unknown bar:", config.Bar)
 			return

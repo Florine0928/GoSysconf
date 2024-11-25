@@ -9,16 +9,16 @@ import (
 )
 
 var config struct { // config
-	Wallpaper string `json:"wallpaper"` // path to wallpaper
-	Util      string `json:"util"`      // enabled or disabled - related to wallpaper setter
-	Bar       string `json:"bar"`       // self explanatory
-	Utile     string `json:"utile"`     // enabled or disabled - related to bar
-	Scheme    string `json:"scheme"`    // Colorscheme - semi-related to pywal
-	Looper    string `json:"looper"`    // enabled or disabled
-	LooperUtil    string `json:"looperUtil"`    // enabled or disabled - related to wallpaper setter
-	LooperUtilCycle string `json:"looperUtilCycle"`    // first or last
-	LooperUtile   string `json:"looperUtile"`    // enabled or disabled - related to bar
-	LooperUtileCycle string `json:"looperUtileCycle"`    // first or last
+	Wallpaper        string `json:"wallpaper"`        // path to wallpaper
+	Util             string `json:"util"`             // enabled or disabled - related to wallpaper setter
+	Bar              string `json:"bar"`              // self explanatory
+	Utile            string `json:"utile"`            // enabled or disabled - related to bar
+	Scheme           string `json:"scheme"`           // Colorscheme - semi-related to pywal
+	Looper           string `json:"looper"`           // enabled or disabled
+	LooperUtil       string `json:"looperUtil"`       // enabled or disabled - related to wallpaper setter
+	LooperUtilCycle  string `json:"looperUtilCycle"`  // first or last
+	LooperUtile      string `json:"looperUtile"`      // enabled or disabled - related to bar
+	LooperUtileCycle string `json:"looperUtileCycle"` // first or last
 }
 
 func main() {
@@ -41,15 +41,15 @@ func main() {
 	b, err := os.ReadFile(configPath)
 	if err != nil {
 		config = struct {
-			Wallpaper string `json:"wallpaper"`
-			Util      string `json:"util"`
-			Bar       string `json:"bar"`
-			Utile     string `json:"utile"`
-			Scheme    string `json:"scheme"`
-			Looper    string `json:"looper"`
-			LooperUtil    string `json:"looperUtil"`
-			LooperUtilCycle string `json:"looperUtilCycle"`
-			LooperUtile   string `json:"looperUtile"`
+			Wallpaper        string `json:"wallpaper"`
+			Util             string `json:"util"`
+			Bar              string `json:"bar"`
+			Utile            string `json:"utile"`
+			Scheme           string `json:"scheme"`
+			Looper           string `json:"looper"`
+			LooperUtil       string `json:"looperUtil"`
+			LooperUtilCycle  string `json:"looperUtilCycle"`
+			LooperUtile      string `json:"looperUtile"`
 			LooperUtileCycle string `json:"looperUtileCycle"`
 		}{}
 	} else {
@@ -82,6 +82,8 @@ func main() {
 				case "looper", "l":
 					Usage("looper")
 					i++
+				case "exec":
+					Usage("exec")
 				case "disable", "d":
 					Usage("disable")
 					i++
@@ -211,7 +213,7 @@ func main() {
 					return
 				}
 			}
-		case "-loop", "-l":	
+		case "-loop", "-l":
 			if i+1 < len(args) {
 				if args[i+1] == "wallpaper" {
 					config.LooperUtil = "enabled"
