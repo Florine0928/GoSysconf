@@ -23,7 +23,7 @@ func Usage(which string) {
 		fmt.Println("	-scheme, -m                             Colorscheme, pyd/pyl for pywal dark/light")
 		fmt.Println("	-reload, -r				Refreshes Components such as bar")
 		fmt.Println("	-disable, -d				Disable a component")
-		fmt.Println("  exec								Execute a event")
+		fmt.Println("         exec					Execute a event")
 	case "wallpaper":
 		fmt.Println("Usage: ", os.Args[0], "-wallpaper, -w path/to/wallpaper.anyformat")
 		fmt.Println("Swaybg or Feh must be installed")
@@ -112,36 +112,37 @@ func FuncBar() {
 	}
 }
 func KillUtil(which string) {
-	if which == "all" {
+	switch which {
+	case "all":
 		es.ExecShell("pkill", true, util)
 		es.ExecShell("pkill", true, config.Bar)
-	} else if which == "util" {
+	case "util":
 		es.ExecShell("pkill", true, util)
-	} else if which == "bar" {
+	case "bar":
 		es.ExecShell("pkill", true, config.Bar)
 	}
 }
 
 func Reload(which string) {
-	if which == "all" {
+	switch which {
+	case "all":
 		KillUtil("all")
 		FuncUtil()
 		FuncBar()
-	} else if which == "util" {
+	case "util":
 		KillUtil("util")
 		FuncUtil()
-	} else if which == "bar" {
+	case "bar":
 		KillUtil("bar")
 		FuncBar()
 	}
 }
 
 func InitPywal() {
-	if config.Scheme == "manual" {
+	switch {
+	case config.Scheme == "manual":
 		return
-	}
-
-	if config.Wallpaper == "" {
+	case config.Wallpaper == "":
 		fmt.Println("Error: No wallpaper specified in configuration")
 		return
 	}
@@ -160,14 +161,16 @@ func InitPywal() {
 }
 
 func Garbage(which string) {
-	if which == "pywal" {
+	switch which {
+	case "pywal":
 		es.ExecShell("rm", true, "-rf", es.Join(home, ".cache", "wal"))
 	}
 }
 
 func Linker() {
 	pywalPath := es.Join(home, ".cache", "wal", "colors-waybar.css")
-	if config.Bar == "waybar" {
+	switch config.Bar {
+	case "waybar":
 		waybarPath := es.Join(home, ".config", "waybar", "colors-waybar.css")
 		if err := os.Symlink(pywalPath, waybarPath); err != nil {
 			return
