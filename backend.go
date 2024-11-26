@@ -12,7 +12,8 @@ import (
 // echo("GNU Bash 4.4.19(1)-release (x86_64-pc-linux-gnu)")
 
 func Usage(which string) {
-	if which == "general" {
+	switch which {
+	case "general":
 		fmt.Println("Usage:", os.Args[0], "[OPTIONS]")
 		fmt.Println("	Options:")
 		fmt.Println("	-help, -h (Option)			Shows this help message unless a option is specified")
@@ -23,29 +24,29 @@ func Usage(which string) {
 		fmt.Println("	-reload, -r				Refreshes Components such as bar")
 		fmt.Println("	-disable, -d				Disable a component")
 		fmt.Println("  exec								Execute a event")
-	} else if which == "wallpaper" {
+	case "wallpaper":
 		fmt.Println("Usage: ", os.Args[0], "-wallpaper, -w path/to/wallpaper.anyformat")
 		fmt.Println("Swaybg or Feh must be installed")
-	} else if which == "bar" {
+	case "bar":
 		fmt.Println("Usage: ", os.Args[0], "-bar, -b <waybar/polybar/ags>")
 		fmt.Println("One of these must be installed")
-	} else if which == "scheme" {
+	case "scheme":
 		fmt.Println("Usage: ", os.Args[0], "-scheme, -m <manual/pyd/pyl>")
 		fmt.Println("	Pywal must be installed: https://github.com/dylanaraps/pywal")
 		fmt.Println("	Pyd and pyl are shortcuts for dark and light respectively")
-	} else if which == "reload" {
+	case "reload":
 		fmt.Println("Usage: ", os.Args[0], "-reload, -r <all/util/bar>")
 		fmt.Println("	Can only reload enabled components")
-	} else if which == "exec" {
+	case "exec":
 		fmt.Println("Usage: ", os.Args[0], "exec <which>")
 		fmt.Println("Available events: looper.wallpaper, looper.bar, looper.bar")
-	} else if which == "disable" {
+	case "disable":
 		fmt.Println("Usage: ", os.Args[0], "-disable, -d <all/util/bar>")
-	} else if which == "looper" {
+	case "looper":
 		fmt.Println("Usage: ", os.Args[0], "-looper, -l <all/util/bar>")
 		fmt.Println("	Cycle between turning on/off a component")
 		fmt.Println("	Available components: wallpaper, bar")
-	} else {
+	default:
 		fmt.Println("Usage:", os.Args[0], "[OPTIONS]")
 	}
 }
