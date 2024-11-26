@@ -52,23 +52,17 @@ func Usage(which string) {
 }
 
 func CacheDir() {
-	if es.FileExists(cache) == false {
-		err := os.MkdirAll(cache, 0755)
-		if err != nil {
+	if !es.FileExists(cache) {
+		if err := os.MkdirAll(cache, 0755); err != nil {
 			fmt.Println("Error creating cache directory:", err)
 			os.Exit(1)
 		}
-		if !es.FileExists(cachewp) {
-			file, err := os.Create(cachewp)
-			if err != nil {
-				fmt.Println("Error creating cache file:", err)
-				return
-			}
-			defer file.Close()
-			fmt.Println("Cache file created successfully")
-		} else {
-			fmt.Println("Cache file already exists")
+		if err := os.WriteFile(cachewp, []byte{}, 0644); err != nil {
+			fmt.Println("Error creating cache file:", err)
+			return
 		}
+		fmt.Println("Cache file created successfully")
+		return
 	}
 }
 
