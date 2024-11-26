@@ -1,5 +1,5 @@
 GO = go
-bin = ./gopherconf
+bin = gomgr
 
 build:
 	$(GO) build

@@ -28,7 +28,7 @@ func main() {
 		fmt.Println("Error fetching home directory:", err)
 		os.Exit(1)
 	}
-	cache = es.Join(home, ".cache", "gopherconf")
+	cache = es.Join(home, ".cache", "gomgr")
 	CacheDir()
 
 	if SESSION == "wayland" {
@@ -87,6 +87,8 @@ func main() {
 				case "disable", "d":
 					Usage("disable")
 					i++
+				case "help", "h":
+					Usage("easteregg")
 				default:
 					Usage("general")
 				}

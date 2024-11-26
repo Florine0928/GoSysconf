@@ -1,4 +1,4 @@
-module gopherconf
+module gomgr
 
 go 1.18
 

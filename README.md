@@ -1,38 +1,68 @@
 
-# Gopherconf
-    // MacOS is not supported
-    unix := [3]string{"Linux", "FreeBSD", "AnyBSD"}
-    fmt.Printf("A %v CLI Utility\n", unix)
-## What this?
+**GOMGR CLI Utility**
+=====================
 
-A CLI system management utility for Unix-like systems written in glorious language of the Gopher
+A command-line utility for managing rice components on UNIX systems (excluding MacOS).
 
-## What this does?
-- Set wallpaper (Swaybg and Feh for Wayland and X11)
-- Start, Kill, Reload Waybar and AGS Bar on the fly
-- Optional Pywal integration, and linker to Waybar (Check wiki.md for more details)
-- Gopher
-- Extra info in Wiki.md
+**Table of Contents**
+-----------------
 
-## Use case?
-Probally a backend utility you hook up to your window manager's keybind daemon
+* [Introduction](#introduction)
+* [Features](#features)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Configuration](#configuration)
+* [Contributing](#contributing)
+* [License](#license)
 
+**Introduction**
+---------------
 
-## Installation
+### This utility provides a simple and easy-to-use interface for managing rice components, including bars and wallpaper setters on UNIX systems (excluding MacOS).
+
+**Features**
+------------
+
+* Manage rice components, including bars and wallpaper setters
+* Multiple colorschemes available: manual, pywal dark, pywal light
+* Toggle on/off components such as bar and wallpaper setter
+* Configure and reload components as needed on the fly
+* Can be used as WM startup script
+
+**Installation**
+---------------
+
+To install this utility, simply clone the repository and run the installation script:
 ```bash
-Dependencies: golang make
-Go Dependencies: GO59
+go get github.com/furiousman59/GO59
+git clone github.com/furiousman59/gomgr && cd gomgr
+make build && sudo make install
 ```
+**Usage**
+-----
 
+The utility can be run from the command line using the following syntax:
 ```bash
-go get github.com/furiousman59/GO59@Latest
-go install github.com/furiousman59/gopherconf@latest
+gomgr [command] [options]
 ```
+List options:
 
-## Usage
+* `-h`, `--help`: Display help message
+* `-h {command}`, `--help {command}`: Display help message for a specific command
 
-```bash
-gopherconf -help
-```
+Further explanation of functions can be found in wiki.md
 
-### Thanks readme.so for this readme!!
+**Configuration**
+--------------
+
+The utility uses a configuration file to store settings. The configuration file is located at `~/.cache/gomgr/config.json`.
+
+**Contributing**
+------------
+
+Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request.
+
+**License**
+-------
+
+This project is licensed under the GNU General Public License V3. See the LICENSE file for details.

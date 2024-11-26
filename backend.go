@@ -46,6 +46,8 @@ func Usage(which string) {
 		fmt.Println("Usage: ", os.Args[0], "-looper, -l <all/util/bar>")
 		fmt.Println("	Cycle between turning on/off a component")
 		fmt.Println("	Available components: wallpaper, bar")
+	case "easteregg":
+		fmt.Println("uooooohhhhh!!!!!")
 	default:
 		fmt.Println("Usage:", os.Args[0], "[OPTIONS]")
 	}
@@ -67,10 +69,10 @@ func CacheDir() {
 }
 
 var home string
-var cache string   // ~/.cache/gopherconf
+var cache string   // ~/.cache/gomgr
 var cachewp string // cached wallpaper
 var SESSION = os.Getenv("XDG_SESSION_TYPE")
-var util string
+var util string // wallpaper setter
 
 func FuncUtil() {
 	if SESSION == "wayland" {
@@ -163,7 +165,7 @@ func InitPywal() {
 func Garbage(which string) {
 	switch which {
 	case "pywal":
-		es.ExecShell("rm", true, "-rf", es.Join(home, ".cache", "wal"))
+		os.RemoveAll(es.Join(home, ".cache", "wal"))
 	}
 }
 
