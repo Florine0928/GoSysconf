@@ -12,6 +12,7 @@ A CLI system management utility for Unix-like systems written in glorious langua
 - Start, Kill, Reload Waybar and AGS Bar on the fly
 - Optional Pywal integration, and linker to Waybar (Check wiki.md for more details)
 - Gopher
+- Extra info in Wiki.md
 
 ## Use case?
 Probally a backend utility you hook up to your window manager's keybind daemon
@@ -25,7 +26,7 @@ Go Dependencies: GO59
 
 ```bash
 go get github.com/furiousman59/GO59@Latest
-git clone github.com/furiousman59/gopherconf && cd gopherconf && make build && sudo make install
+go install github.com/furiousman59/gopherconf@latest
 ```
 
 ## Usage

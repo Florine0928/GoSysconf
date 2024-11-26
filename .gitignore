@@ -1,7 +1,6 @@
 persist/*
 persist/
 gopherconf
-go.sum
 *.exe
 *.out
 *.o
